@@ -45,22 +45,32 @@ const part2 = () => {
             count += Math.floor(rotation);
         }
 
-        for (let i = 0; i < distance; i++) {
-            if (direction === 'L') {
-                pos--;
-            } else {
-                pos++;
-            }
-
-            if (pos === 0 || pos === 100) {
+        // Count positions landed on during movement (optimized)
+        if (direction === 'R') {
+            // For right movement, count if we land on 100 during movement
+            const stepsTo100 = 100 - pos;
+            if (stepsTo100 >= 1 && stepsTo100 <= distance) {
                 count++;
             }
-
-            if (pos < 0) {
-                pos += 100;
-            } else if (pos > 99) {
-                pos -= 100;
+        } else {
+            // For left movement, count if we land on 0 during movement
+            const stepsTo0 = pos;
+            if (stepsTo0 >= 1 && stepsTo0 <= distance) {
+                count++;
             }
+        }
+
+        // Update final position
+        if (direction === 'L') {
+            pos -= distance;
+        } else {
+            pos += distance;
+        }
+
+        if (pos < 0) {
+            pos += 100;
+        } else if (pos > 99) {
+            pos -= 100;
         }
     }
 
