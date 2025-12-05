@@ -1,3 +1,5 @@
+// No AI version. I did not like the way did the combine merge in part 2.
+
 const fs = require('fs');
 
 const input = fs.readFileSync('data', 'utf8');
