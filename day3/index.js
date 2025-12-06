@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const input = fs.readFileSync('sample', 'utf8');
+const input = fs.readFileSync('data', 'utf8');
 const banks = input.split('\n').map(line => line.split('').map(Number));
 
 const part1 = () => {
@@ -26,6 +26,29 @@ const part1 = () => {
 }
 const part2 = () => {
     let totalCharge = 0;
+
+
+    for (const bank of banks) {
+        const batteryBank = [0,0,0,0,0,0,0,0,0,0,0,0];
+        let batteryIndex = 0;
+        let bankIndex = 0;
+
+        do {
+            for (let i = bankIndex; i < bank.length - (11 - batteryIndex); i++) {
+                const battery = bank[i];
+
+                if (battery > batteryBank[batteryIndex]) {
+                    batteryBank[batteryIndex] = battery;
+                    bankIndex = i + 1;
+                }
+            }
+
+            batteryIndex++;
+        } while (batteryIndex < batteryBank.length);
+
+        totalCharge += parseInt(batteryBank.join(''));
+    }
+
 
     return totalCharge;
 }
