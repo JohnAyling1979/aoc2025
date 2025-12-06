@@ -14,41 +14,36 @@ const part1 = () => {
             const battery = bank[i];
 
             if (battery > firstLargestBattery && i !== bank.length - 1) {
-                firstLargestBattery = battery
+                firstLargestBattery = battery;
                 secondLargestBattery = bank[i + 1];
             } else if (battery > secondLargestBattery) {
                 secondLargestBattery = battery;
             }
         }
-        totalCharge += parseInt(`${firstLargestBattery}${secondLargestBattery}`);
+        totalCharge += firstLargestBattery * 10 + secondLargestBattery;
     }
     return totalCharge;
 }
 const part2 = () => {
     let totalCharge = 0;
 
-
     for (const bank of banks) {
-        const batteryBank = [0,0,0,0,0,0,0,0,0,0,0,0];
-        let batteryIndex = 0;
+        const batteryBank = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         let bankIndex = 0;
 
-        do {
-            for (let i = bankIndex; i < bank.length - (11 - batteryIndex); i++) {
-                const battery = bank[i];
+        for (let batteryIndex = 0; batteryIndex < batteryBank.length; batteryIndex++) {
+            const endIndex = bank.length - (11 - batteryIndex);
 
-                if (battery > batteryBank[batteryIndex]) {
-                    batteryBank[batteryIndex] = battery;
+            for (let i = bankIndex; i < endIndex; i++) {
+                if (bank[i] > batteryBank[batteryIndex]) {
+                    batteryBank[batteryIndex] = bank[i];
                     bankIndex = i + 1;
                 }
             }
+        }
 
-            batteryIndex++;
-        } while (batteryIndex < batteryBank.length);
-
-        totalCharge += parseInt(batteryBank.join(''));
+        totalCharge += Number(batteryBank.join(''));
     }
-
 
     return totalCharge;
 }
