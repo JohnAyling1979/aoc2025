@@ -10,27 +10,23 @@ const part1 = () => {
 
     for (const line of lines) {
         const elements = line.trim().split(/\s+/);
+        const firstElement = elements[0];
 
-        if (elements[0].match(/^\d+$/)) {
-            rows.push(elements);
+        if (!isNaN(firstElement) && firstElement !== '') {
+            rows.push(elements.map(Number));
         } else {
             operators = elements;
         }
     }
 
-    const result = rows[0].map(Number);
+    const result = [...rows[0]];
 
     for (let i = 1; i < rows.length; i++) {
-
-        const numbers = rows[i];
-        for (let j = 0; j < numbers.length; j++) {
-            const number = Number(numbers[j]);
-            const operator = operators[j];
-
-            if (operator === '+') {
-                result[j] += number;
+        for (let j = 0; j < rows[i].length; j++) {
+            if (operators[j] === '+') {
+                result[j] += rows[i][j];
             } else {
-                result[j] *= number;
+                result[j] *= rows[i][j];
             }
         }
     }
@@ -40,52 +36,48 @@ const part1 = () => {
 
 const part2 = () => {
     const operators = lines[lines.length - 1].split(/\s+/);
+    const dataLines = lines.slice(0, -1);
 
-    let length = 0;
-
-    for (let i = 0; i < lines.length - 1; i++) {
-        length = Math.max(length, lines[i].length);
-    }
-
-    for (let i = 0; i < lines.length - 1; i++) {
-        lines[i] = lines[i].padEnd(length, ' ');
-    }
+    const maxLength = Math.max(...dataLines.map(line => line.length));
+    const paddedLines = dataLines.map(line => line.padEnd(maxLength, ' '));
 
     let operatorIndex = 0;
-    let total = 0
+    let total = null;
     let grandTotal = 0;
 
-    for (let column = 0; column < length; column++) {
-        let number = '';
+    for (let column = 0; column < maxLength; column++) {
+        const digits = [];
 
-        for (let row = 0; row < lines.length - 1; row++) {
-            if (lines[row][column] !== ' ') {
-                number += lines[row][column];
+        for (let row = 0; row < paddedLines.length; row++) {
+            const char = paddedLines[row][column];
+            if (char !== ' ') {
+                digits.push(char);
             }
         }
 
-        if (number !== '') {
-            if (operators[operatorIndex] === '+') {
-                if (total === 0) {
-                    total = Number(number);
-                } else {
-                    total += Number(number);
-                }
+        if (digits.length > 0) {
+            const number = Number(digits.join(''));
+            const operator = operators[operatorIndex];
+
+            if (total === null) {
+                total = number;
+            } else if (operator === '+') {
+                total += number;
             } else {
-                if (total === 0) {
-                    total = Number(number);
-                } else {
-                    total *= Number(number);
-                }
+                total *= number;
             }
         } else {
+            if (total !== null) {
+                grandTotal += total;
+                total = null;
+            }
             operatorIndex++;
-            grandTotal += total;
-            total = 0;
         }
     }
 
-    grandTotal += total;
+    if (total !== null) {
+        grandTotal += total;
+    }
 
     return grandTotal;
 }
