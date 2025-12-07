@@ -44,30 +44,31 @@ const part1 = () => {
 }
 
 const part2 = () => {
-    const paths = Array(rows).fill(null).map(() => Array(cols).fill(0));
-    paths[0][startX] = 1;
+    // Use two rows at a time (sliding window) to reduce memory
+    let current = Array(cols).fill(0);
+    current[startX] = 1;
 
     for (let y = 0; y < rows - 1; y++) {
+        const next = Array(cols).fill(0);
+
         for (let x = 0; x < cols; x++) {
-            if (paths[y][x] > 0) {
-                if (diagram[y][x] === '^') {
-                    // Split to left and right
-                    if (x > 0) {
-                        paths[y + 1][x - 1] += paths[y][x];
-                    }
-                    if (x < cols - 1) {
-                        paths[y + 1][x + 1] += paths[y][x];
-                    }
-                } else {
-                    // Continue straight down
-                    paths[y + 1][x] += paths[y][x];
-                }
+            if (current[x] === 0) continue;
+
+            if (diagram[y][x] === '^') {
+                // Split to left and right
+                if (x > 0) next[x - 1] += current[x];
+                if (x < cols - 1) next[x + 1] += current[x];
+            } else {
+                // Continue straight down
+                next[x] += current[x];
             }
         }
+
+        current = next;
     }
 
     // Sum all paths in the last row
-    return paths[rows - 1].reduce((sum, count) => sum + count, 0);
+    return current.reduce((sum, count) => sum + count, 0);
 }
 
 console.log(`Part 1: ${part1()}`);
