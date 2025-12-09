@@ -1,0 +1,12 @@
+Part 2
+
+Too high
+4673104062
+4649453514
+4648337226
+
+
+4518426800 not correct
+
+
+run with node --max-old-space-size=32768 index.js
