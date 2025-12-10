@@ -56,11 +56,21 @@ const part2 = () => {
 
     const part2Lines = JSON.parse(JSON.stringify(lines));
 
-    for (const line of part2Lines) {
+    for (let i = 0; i < part2Lines.length; i++) {
+        console.log(`Working on line: ${i + 1} of ${part2Lines.length}`);
+
+        const line = part2Lines[i];
+
         line.shift();
-        const goal = line.pop().slice(1).slice(0, -1).split(',').map(Number);
+        const goal = line.pop().slice(1).slice(0, -1).split(',').map(Number).reduce((acc, curr, index) => {
+            acc[index] = curr;
+            return acc;
+        }, {});
         const buttons = line;
-        const initialState = Array(goal.length).fill(0);
+        const initialState = Array(Object.keys(goal).length).fill(0).reduce((acc, curr, index) => {
+            acc[index] = curr;
+            return acc;
+        }, {});
 
         const queue = [{state: initialState, pressCount: 0}];
         const visited = new Set([JSON.stringify(initialState)]);
@@ -75,7 +85,7 @@ const part2 = () => {
 
             for (const button of buttons) {
                 indexes = button.slice(1).slice(0, -1).split(',');
-                let newState = [...state];
+                const newState = JSON.parse(JSON.stringify(state));
 
                 for (const index of indexes) {
                     newState[index]++;
