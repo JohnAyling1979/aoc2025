@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const input = fs.readFileSync('sample', 'utf8');
+const input = fs.readFileSync('data', 'utf8');
 
 const lines = input.split('\n').map(line => line.split(' '));
 
@@ -56,46 +56,38 @@ const part2 = () => {
 
     const part2Lines = JSON.parse(JSON.stringify(lines));
 
-    const line = part2Lines[1];
-
-    // for (const line of part2Lines) {
+    for (const line of part2Lines) {
         line.shift();
-        const goal = line.pop().slice(1).slice(0, -1).split(',').join('');
+        const goal = line.pop().slice(1).slice(0, -1).split(',').map(Number);
         const buttons = line;
-        const initialState = Array(goal.length).fill('0').join('');
+        const initialState = Array(goal.length).fill(0);
 
         const queue = [{state: initialState, pressCount: 0}];
-        const visited = new Set([initialState]);
-
-        console.log('intial', goal, initialState, buttons);
+        const visited = new Set([JSON.stringify(initialState)]);
 
         while (queue.length > 0) {
             const {state, pressCount} = queue.shift();
 
-            console.log('checking', state, goal, pressCount);
-
-            if (state === goal) {
+            if (JSON.stringify(state) === JSON.stringify(goal)) {
                 total += pressCount;
                 break;
             }
 
             for (const button of buttons) {
                 indexes = button.slice(1).slice(0, -1).split(',');
-                let newState = state.split('');
+                let newState = [...state];
 
                 for (const index of indexes) {
                     newState[index]++;
                 }
 
-                newState = newState.join('');
-
-                if (!visited.has(newState)) {
+                if (!visited.has(JSON.stringify(newState))) {
                     queue.push({state: newState, pressCount: pressCount + 1});
-                    visited.add(newState);
+                    visited.add(JSON.stringify(newState));
                 }
             }
         }
-    // }
+    }
 
     return total;
 }
