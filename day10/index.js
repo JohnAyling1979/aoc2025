@@ -91,7 +91,14 @@ const part2 = () => {
                     newState[index]++;
                 }
 
-                if (!visited.has(JSON.stringify(newState))) {
+                let overflow = false;
+                for (const index of Object.keys(newState)) {
+                    if (newState[index] > goal[index]) {
+                        overflow = true;
+                    }
+                }
+
+                if (!visited.has(JSON.stringify(newState)) && !overflow) {
                     queue.push({state: newState, pressCount: pressCount + 1});
                     visited.add(JSON.stringify(newState));
                 }
