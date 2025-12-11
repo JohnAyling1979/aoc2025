@@ -1,0 +1,5 @@
+you -> bbb -> ddd -> ggg -> out
+you -> bbb -> eee -> out
+you -> ccc -> ddd -> ggg -> out
+you -> ccc -> eee -> out
+you -> ccc -> fff -> out
